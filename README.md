@@ -3,7 +3,7 @@
 <h3>A aplicação "Sangue Solidário" foi pensada para facilitar o processo de doação de sangue</h3>
 
 <h2>
-  Integrantes:\n
+  Integrantes:
   <ul>
     <li>Isabella Pereirra Pessoa</li>
     <li>Isabelle Moura Soares</li>
