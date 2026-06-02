@@ -2,7 +2,7 @@
 
 <h3>A aplicação "Sangue Solidário" foi pensada para facilitar o processo de doação de sangue</h3>
 
-<h2 style="color: red;">Tecnologias e linguagens utilizadas:
+<h2>Tecnologias e linguagens utilizadas:
   <ul>
     <li>Back-end: Python, MySQL, Draw.io</li>
     <li>Front-end: HTML, CSS, Javascript, Figma</li>
@@ -19,3 +19,10 @@
     <li>Victor Moreira</li>
   </ul>
 </h2>
+
+
+<style scoped>
+  h2 {
+    color: red;
+  }
+</style>
