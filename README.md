@@ -2,6 +2,14 @@
 
 <h3>A aplicação "Sangue Solidário" foi pensada para facilitar o processo de doação de sangue</h3>
 
+<h2>Tecnologias e linguagens utilizadas:
+  <ul>
+    <li>Back-end: Python, MySQL, Draw.io</li>
+    <li>Front-end: HTML, CSS, Javascript, Figma</li>
+    <li>Gestão e configuração: Trello, Github</li>
+  </ul>
+</h2>
+
 <h2>
   Integrantes:
   <ul>
