@@ -21,8 +21,3 @@
 </h2>
 
 
-<style scoped>
-  h2 {
-    color: red;
-  }
-</style>
