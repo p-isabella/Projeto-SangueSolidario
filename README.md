@@ -21,6 +21,5 @@
 </h2>
 
 Links úteis:
-/br
 https://trello.com/b/FnrzL9Z3/projeto-sanguesolidario
 https://www.figma.com/design/HgVXyKl4C27vNlN3YNId9i/Sangue-Solid%C3%A1rio?node-id=0-1&t=dSfTpgIx7fpAwz28-1
