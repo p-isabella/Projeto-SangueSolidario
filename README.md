@@ -20,4 +20,5 @@
   </ul>
 </h2>
 
-
+Links úteis:
+https://trello.com/b/FnrzL9Z3/projeto-sanguesolidario
