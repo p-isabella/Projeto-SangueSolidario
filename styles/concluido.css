@@ -1,0 +1,176 @@
+.header-SangueSolidario {
+    background-color: #74A3B5;
+}
+
+.Logo {
+    color: white;
+}
+
+.links {
+    color: white;
+    text-decoration: none;
+}
+
+.Logo {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.3rem;
+}
+
+.links {
+    color: #fff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.links:hover {
+    color: #f1c0c0;
+}
+
+@media (max-width: 576px) {
+    .header-SangueSolidario .container .row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .header-SangueSolidario .col-4,
+    .header-SangueSolidario .col-8 {
+        width: 100% !important;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .header-SangueSolidario .col-8 {
+        flex-wrap: wrap;
+        justify-content: flex-start !important;
+        gap: 0.25rem;
+    }
+
+    .headerBotoes {
+        font-size: 0.8rem;
+        padding: 4px 6px;
+    }
+}
+
+.headerBotoes {
+    padding: 5px;
+}
+
+.headerBotoes:hover {
+    background: #3d6d80;
+    color: #FFF;
+    border-radius: 30px;
+    padding: 5px;
+    transition: 0.3s;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f9;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.fimPagina {
+    background: #3d6d80;
+    height: 50%;
+}
+
+footer {
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.imagens {
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+}
+
+.direitosAutorais {
+    width: 100%;
+    background-color: #74A3B5;
+}
+
+.info-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.info-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    padding: 2rem 2.5rem;
+    width: 50%;
+    max-width: 600px;
+    min-width: 300px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 0.5rem 0;
+}
+
+.info-icon {
+    font-size: 2rem;
+}
+
+.info-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+}
+
+.info-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+}
+.conclusao-header {
+    background-color: #27ae60;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.conclusao-header h3 {
+    color: #fff;
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.conclusao-icon {
+    font-size: 2rem;
+}
+
+#voltar-btn {
+    background-color: #74A3B5;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#voltar-btn:hover {
+    background-color: #3d6d80;
+}

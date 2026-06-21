@@ -1,0 +1,35 @@
+.botao-voltar-container {
+    width: 50px;
+}
+
+.card-mapa {
+    border-radius: 0px;
+}
+
+.lista-wrapper {
+    max-height: 220px;
+}
+
+.lista-scroll {
+    max-height: 180px;
+}
+
+.btn-link-clean {
+    text-decoration: none;
+    color: aliceblue;
+}
+
+.btn-saiba-mais {
+    background-color: #6c8cc4;
+    border: none;
+}
+
+.btn-quero-doar {
+    background-color: #cc2a41;
+    border: none;
+}
+
+#map {
+    height: 350px;
+    width: 100%;
+}
