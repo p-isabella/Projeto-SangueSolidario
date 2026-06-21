@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sangue Solidário</title>
+
+    <link rel="shortcut icon" href="assets/logoSangueSolidario.png" type="image/x-icon">
+    <link rel="stylesheet" href="styles/concluido.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <header class="header-SangueSolidario">
+        <div class="container">
+            <div class="row py-3 align-items-center justify-content-between">
+                <div class="col-4 d-flex align-items-center">
+                    <img src="assets/logoSangueSolidario.png" alt="SangueSolidario" class="me-2"
+                        style="max-height: 40px;">
+                    <h2 class="mb-0 Logo">Sangue Solidário</h2>
+                </div>
+                <div class="col-8 text-end d-flex justify-content-around">
+                    <a href="index.html" class="px-2 links headerBotoes">Início</a>
+                    <a href="#SobreProjeto" class="px-2 links headerBotoes">Quem Somos</a>
+                    <a href="NossasUnidades.html" class="px-2 links headerBotoes">Onde Doar</a>
+                    <a href="#Contato" class="px-2 links headerBotoes">Contato</a>
+                    <a href="#" class="px-2 links headerBotoes">Login/Cadastro</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="info-wrapper mt-5">
+        <div class="info-card">
+            <div class="conclusao-header">
+                <span class="conclusao-icon">✅</span>
+                <h3>Seu agendamento foi concluído!</h3>
+            </div>
+            <hr>
+            <div class="info-row">
+                <div class="info-icon">📍</div>
+                <div>
+                    <span class="info-label">Unidade de doação</span>
+                    <span class="info-value" id="info-unidade">—</span>
+                </div>
+            </div>
+            <hr>
+            <div class="info-row">
+                <div class="info-icon">📅</div>
+                <div>
+                    <span class="info-label">Data agendada</span>
+                    <span class="info-value" id="info-data">—</span>
+                </div>
+            </div>
+            <hr>
+            <div class="info-row">
+                <div class="info-icon">🕒</div>
+                <div>
+                    <span class="info-label">Horário agendado</span>
+                    <span class="info-value" id="info-hora">—</span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            <button id="voltar-btn">Voltar ao início</button>
+        </div>
+    </div>
+
+    <footer></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/concluido.js"></script>
+</body>
+
+</html>
