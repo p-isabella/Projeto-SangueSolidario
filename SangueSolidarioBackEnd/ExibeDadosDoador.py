@@ -2,10 +2,5 @@ from ServicoDoador import ServicoDoador
 
 class ExibeDadosDoador(ServicoDoador):
     # Algoritmo concreto de Exibição
-
-    def __init__(self, doador=None):
-        super().__init__()
-        self.__doador = doador
-
-    def execute(self):
-        return self.__doador
+    def execute(self, doador):
+        return doador
