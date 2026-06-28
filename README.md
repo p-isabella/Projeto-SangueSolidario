@@ -21,9 +21,5 @@
 </h2>
 
 Links úteis:
-
-<p>Trello: https://trello.com/b/FnrzL9Z3/projeto-sanguesolidario</p>
-<p>Figma: https://www.figma.com/design/HgVXyKl4C27vNlN3YNId9i/Sangue-Solid%C3%A1rio?node-id=0-1&t=dSfTpgIx7fpAwz28-1</p>
-<p>Apresentação CANVA: https://www.canva.com/design/DAHLX37MfOA/V5UVL5BYfgWSVLiSplB0wQ/edit</p>
-<p>Documento PB: https://docs.google.com/document/d/1FMowy4gcnVjaS87Pyg0F1mfg__KhCZfWi4P-fo1Wnjo/edit?tab=t.0</p>
-<p>Planilha PB: https://docs.google.com/spreadsheets/d/12clNxvqBejBG_o7SnFYZ99s-VmUORnk5QkHqkwzzG-c/edit?usp=sharing</p>
+https://trello.com/b/FnrzL9Z3/projeto-sanguesolidario
+https://www.figma.com/design/HgVXyKl4C27vNlN3YNId9i/Sangue-Solid%C3%A1rio?node-id=0-1&t=dSfTpgIx7fpAwz28-1
