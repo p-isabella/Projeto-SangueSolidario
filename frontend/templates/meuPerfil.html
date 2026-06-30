@@ -1,12 +1,16 @@
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="styles/header.css">
-    <link rel="stylesheet" href="styles/footer.css">
-    <title>Login</title>
+    <link rel="stylesheet" href="/static/styles/header.css">
+    <link rel="stylesheet" href="/static/styles/footer.css">
+    <link rel="stylesheet" href="/static/styles/cadastro.css">
+    <link rel="stylesheet" href="/static/styles/meuPerfil.css">
+    <title>Meu Perfil</title>
+    <script src="/static/scripts/verificaSessao.js"></script>
 </head>
 
 <body>
@@ -14,22 +18,79 @@
         <div class="container">
             <div class="row py-3 align-items-center justify-content-between">
                 <div class="col-4 d-flex align-items-center">
-                    <img src="assets/logoSangueSolidario.png" alt="SangueSolidario" class="me-2"
+                    <img src="/static/assets/logoSangueSolidario.png" alt="SangueSolidario" class="me-2"
                         style="max-height: 40px;">
                     <h2 class="mb-0 Logo">Sangue Solidário</h2>
+                </div>
+                <div class="col-8 text-end d-flex justify-content-around">
+                    <a href="/" class="px-2 links headerBotoes">Início</a>
+                    <a href="/#SobreProjeto" class="px-2 links headerBotoes">Quem Somos</a>
+                    <a href="/paginaInicial/nossasUnidades" class="px-2 links headerBotoes">Onde Doar</a>
+                    <a href="/#Contato" class="px-2 links headerBotoes">Contato</a>
+                    <a href="/paginaInicial/login" class="px-2 links headerBotoes" id="linkLoginCadastro">Login/Cadastro</a>
                 </div>
             </div>
         </div>
     </header>
-
-
-    
-    <footer class="text-white py-4 fimPagina h-30">
-        <div class="container d-flex flex-row gap-4 py-5 align-items-center justify-content-center">
+ 
+    <div id="BotaoVoltar" class="position-sticky m-4" style="width: 50px; flex-shrink: 0;">
+        <a href="/PaginaInicialUsuario">
+            <svg xmlns="http://www.w3.org/2000/svg" width="33" height="50" viewBox="0 0 33 50" fill="none">
+                <path d="M29.8205 47.5L3.8205 25.2557L29.8205 2.5" stroke="#8B1C2B" stroke-width="5"
+                    stroke-linecap="round" />
+            </svg>
+        </a>
+    </div>
+ 
+    <div class="container-fluid cadastro d-flex flex-column align-items-center p-0">
+ 
+        <div class="row py-2">
+            <h2 class="text-center" style="color:#505050;">Meu Perfil</h2>
+        </div>
+ 
+        <div class="row align-items-start gap-4" style="width: 100%; max-width: 600px;">
+            <div class="col-auto">
+                <div class="perfil-foto-placeholder">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="8" r="4" fill="#aab2bd" />
+                        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" fill="#aab2bd" />
+                    </svg>
+                </div>
+            </div>
             <div class="col">
-                <p>Todos os direitos reservados - ADS 2026</p>
+                <p>
+                    <strong>Nome completo:</strong><br>
+                    <input type="text" id="perfil_nome" class="campo-perfil" readonly>
+                </p>
+                <p>
+                    <strong>E-mail:</strong><br>
+                    <input type="text" id="perfil_email" class="campo-perfil" readonly>
+                </p>
+                <p>
+                    <strong>Senha:</strong><br>
+                    <input type="password" id="perfil_senha" class="campo-perfil" readonly>
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-2" id="botaoMostrarSenha">Mostrar</button>
+                </p>
             </div>
         </div>
-    </footer>
+ 
+        <div id="mensagemPerfil" class="w-100 text-center mt-2"></div>
+ 
+        <div class="row py-3" id="areaBotoesPerfil">
+            <button class="button" id="botaoEditarPerfil">Editar</button>
+            <button class="button" id="botaoExcluirConta" style="background:#922634;">Excluir</button>
+            <button class="button" id="botaoHistoricoAgendamentos" style="background:#2c6e8a;"><a href="/usuario/HistoricoAgendamentos">Histórico</a></button>
+        </div>
+ 
+        <div class="row py-3 d-none" id="areaBotoesEdicao">
+            <button class="button" id="botaoSalvarPerfil">Salvar</button>
+            <button class="button" id="botaoCancelarEdicao" style="background:#888;">Cancelar</button>
+        </div>
+ 
+    </div>
+
+    <script src="/static/scripts/auth.js"></script>
+    <script src="/static/scripts/meuPerfil.js"></script>
 </body>
+
 </html>

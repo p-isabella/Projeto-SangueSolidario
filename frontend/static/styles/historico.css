@@ -1,0 +1,288 @@
+body {
+    background: #f8f8f8;
+    min-height: 100vh;
+}
+
+.pagina-historico {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px 48px;
+}
+
+.pagina-titulo {
+    color: #505050;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 28px 0 20px;
+    text-align: center;
+}
+
+.card-agendamento {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.card-icone {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: #fdeaea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-corpo {
+    flex: 1;
+}
+
+.card-unidade {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #222;
+    margin-bottom: 6px;
+}
+
+.card-detalhe {
+    font-size: 0.88rem;
+    color: #666;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card-detalhe span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.badge-status {
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    margin-left: auto;
+    flex-shrink: 0;
+    align-self: flex-start;
+}
+
+.status-confirmado {
+    background: #e7f6ee;
+    color: #1a7a45;
+}
+
+.vazio {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+}
+
+.vazio p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.btn-agendar {
+    background: #8B1C2B;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-agendar:hover {
+    background: #6e1521;
+    color: #fff;
+}
+
+.btn-voltar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #8B1C2B;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 20px 0 4px;
+}
+
+.btn-voltar:hover {
+    color: #6e1521;
+}
+
+.contador {
+    font-size: 0.85rem;
+    color: #999;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.card-acoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-acao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+}
+
+.btn-editar {
+    background: #f0f4ff;
+    color: #2a5bd7;
+}
+
+.btn-editar:hover {
+    background: #dce6ff;
+    color: #1a3fa8;
+}
+
+.btn-excluir {
+    background: #fdeaea;
+    color: #8B1C2B;
+}
+
+.btn-excluir:hover {
+    background: #f7c5c5;
+    color: #6e1521;
+}
+
+/* Modal de confirmação */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.ativo {
+    display: flex;
+}
+
+.modal-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 28px 24px;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    text-align: center;
+}
+
+.modal-icone {
+    width: 52px;
+    height: 52px;
+    background: #fdeaea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+}
+
+.modal-titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.modal-desc {
+    font-size: 0.875rem;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.modal-botoes {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.btn-modal-cancelar {
+    flex: 1;
+    padding: 9px 0;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-modal-cancelar:hover {
+    background: #f5f5f5;
+}
+
+.btn-modal-confirmar {
+    flex: 1;
+    padding: 9px 0;
+    border-radius: 8px;
+    border: none;
+    background: #8B1C2B;
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.btn-modal-confirmar:hover {
+    background: #6e1521;
+}
+
+@media (max-width: 576px) {
+    .header-SangueSolidario .container .row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 0.5rem;
+    }
+
+    .header-SangueSolidario .col-4,
+    .header-SangueSolidario .col-8 {
+        width: 100% !important;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .header-SangueSolidario .col-8 {
+        flex-wrap: wrap;
+        justify-content: flex-start !important;
+        gap: 0.25rem;
+    }
+
+    .headerBotoes {
+        font-size: 0.8rem;
+        padding: 4px 6px;
+    }
+}
