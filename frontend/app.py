@@ -1,10 +1,16 @@
 from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS
+from databaseAdapter import databaseAdapter
+from backend import AdministradorAgendamentos
+from backend.AgendamentoDoador import AgendamentoDoador
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'isa'
 # PÁGINAS PÚBLICAS (antes de logar)
+
+database = databaseAdapter()
+admin = AdministradorAgendamentos()
 
 @app.route('/')
 def pagina_inicial():
@@ -108,12 +114,42 @@ def criar_agendamento():
     if 'usuario_id' not in session:
         return jsonify({"status": "erro", "mensagem": "Sessão expirada ou usuário não autenticado."}), 401
 
-    dados = request.get_json()
+    dados = request.get_json(silent=True) or {}
     data = dados.get('data')
     hora = dados.get('hora')
     unidade = dados.get('unidade')
-    # tratamento aqui + salvar o agendamento no banco de dados, vinculado ao usuario logado
-    return jsonify({"status": "sucesso", "mensagem": "Agendamento criado com sucesso!"}), 201
+
+    if not data or not hora or not unidade:
+        return jsonify({"status": "erro", "mensagem": "Dados incompletos do agendamento."}), 400
+
+    agendamento = AgendamentoDoador(
+        doador = session['usuario_id'],
+        data = data,
+        hora = hora,
+        status = 'pendente',
+        id=f"{session['usuario_id']}-{data}-{hora}"
+    )
+    agendamento.unidade = unidade
+
+    if not admin.verificaDisponibilidade(agendamento):
+        return jsonify({"status": "erro", "mensagem": "Já existe um agendamento para esta data e horário."}), 409
+
+    reservado = admin.ReservarAgendamento(agendamento)
+    if not reservado:
+        return jsonify({"status": "erro", "mensagem": "Não foi possível reservar o agendamento."}), 409
+
+    return jsonify({
+        "status": "sucesso",
+        "mensagem": "Agendamento criado com sucesso!",
+        "agendamento": {
+            "id": agendamento.PuxaID(),
+            "data": agendamento.PuxaData(),
+            "hora": agendamento.PuxaHora(),
+            "status": agendamento.PuxaStatus(),
+            "unidade": agendamento.unidade
+        }
+    }), 201
+    #falta puxar os novos dados pro bd
 
 @app.route('/usuario/agendamento/concluido')
 def concluido():
