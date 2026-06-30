@@ -134,10 +134,21 @@ def envio_cadastro():
     email = dados.get('email')
     senha = dados.get('senha')
 
-    if not email or not senha:
-        return jsonify({"status": "erro", "mensagem": "E-mail e senha são obrigatórios!"}), 400
+    if not email or not senha or not cep or not data_nascimento or not tipo_sanguineo or not cpf or not nome_completo:
+        return jsonify({"status": "erro", "mensagem": "Por favor, preencha todos os campos."}), 400
 
-    #!!!! aqui coloca o tratamento + funcoes etc
+    if int(data_nascimento[3:]) < 2010:
+        return jsonify({"Você precisa ter no mínimo 16 anos para doar."}), 400
+
+    #aqui precisa consultar o bd e voltar email caso tenha um igual
+    emailbd = request.get_json()
+    if emailbd == email:
+        return jsonify({"Já existe um cadastro com esse e-mail."}), 400
+    
+    #aqui precisa consultar o bd e voltar email caso tenha um igual
+    cpfbd = request.get_json()
+    if cpfbd == cpf:
+        return jsonify({"Já existe um cadastro com esse CPF."}), 400
 
     return jsonify({"status": "sucesso", "mensagem": "Usuário cadastrado com sucesso!"}), 200
 
