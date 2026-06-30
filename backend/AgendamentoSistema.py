@@ -1,4 +1,4 @@
-from AgendamentoAbstrato import AgendamentoAbstrato
+from .AgendamentoAbstrato import AgendamentoAbstrato
 
 class AgendamentoSistema(AgendamentoAbstrato):
     def __init__(self, data=None, hora=None, status=None, id=None):

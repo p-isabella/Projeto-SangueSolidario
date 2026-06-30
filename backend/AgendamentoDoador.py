@@ -1,5 +1,5 @@
-from AgendamentoAbstrato import AgendamentoAbstrato
-from DoadorAbstrato import DoadorAbstrato
+from .AgendamentoAbstrato import AgendamentoAbstrato
+from .DoadorAbstrato import DoadorAbstrato
 
 class AgendamentoDoador(AgendamentoAbstrato):
     def __init__(self, doador=None, data=None, hora=None, status=None, id=None):
