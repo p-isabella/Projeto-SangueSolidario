@@ -11,7 +11,7 @@ for path in [FRONTEND_DIR, ROOT_DIR]:
 from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS
 from databaseAdapter import databaseAdapter
-from backend import AdministradorAgendamentos
+from backend.AdministradorAgendamentos import AdministradorAgendamentos
 from backend.AgendamentoDoador import AgendamentoDoador
 
 app = Flask(__name__)
@@ -76,9 +76,14 @@ def meu_perfil():
 
 @app.get('/usuario/meuPerfil/ConsultaDados')
 def meu_perfil_consulta():
-    #consulta de todos os dados
-    usuario = usuario_da_sessao()
+    #consulta de todos os dados---------------------------------------------------------------------------------------------------
 
+    usuario = usuario_da_sessao()
+    #qual usuario é esse ---------------------------------------------------------------------------------
+
+    id_usuario = usuario['id']
+    database.selectBy_usuario(id_usuario)
+    
     if not usuario:
         return jsonify({
             "nomeCompleto": None,
@@ -124,7 +129,7 @@ def meu_perfil_edita():
         "mensagem": "Perfil atualizado com sucesso!",
         "usuario": usuario_atual
     }), 200
-    #colocar as edições no banco
+    #colocar as edições no banco-------------------------------------------------------------------------------------------
 
 @app.route('/usuario/meuPerfil/ExcluirConta', methods=['DELETE'])
 def meu_perfil_exclui():
@@ -140,7 +145,7 @@ def historico_agendamentos():
 
 @app.get('/usuario/HistoricoAgendamentos/consulta')
 def historico_agendamentos_consulta():
-    # aqi preciso de uma query de consulta do BD E RETORNAR O HISTORICO DO USUARIO!
+    # aqi preciso de uma query de consulta do BD E RETORNAR O HISTORICO DO USUARIO!-----------------------------------------
     return jsonify([])
 
 @app.route('/usuario/HistoricoAgendamentos/excluir/<string:agendamento_id>', methods=['DELETE'])
@@ -161,7 +166,7 @@ def historico_agendamentos_excluir(agendamento_id):
     if not cancelado:
         return jsonify({"status": "erro", "mensagem": "Não foi possível cancelar o agendamento."}), 400
 
-    #precisa tirar o agendamento do bd
+    #precisa tirar o agendamento do bd--------------------------------------------------------------------------------------
 
     return jsonify({"status": "sucesso", "mensagem": "Agendamento removido com sucesso!"}), 200
 
@@ -225,7 +230,7 @@ def criar_agendamento():
             "unidade": agendamento.unidade
         }
     }), 201
-    #falta puxar os novos dados pro bd
+    #falta puxar os novos dados pro bd-----------------------------------------------------------------------------------
 
 @app.route('/usuario/agendamento/concluido')
 def concluido():
@@ -252,31 +257,35 @@ def envio_cadastro():
     if int(data_nascimento[3:]) < 2010:
         return jsonify({"Você precisa ter no mínimo 16 anos para doar."}), 400
 
-    #aqui precisa consultar o bd e voltar email caso tenha um igual
-    emailbd = request.get_json()
-    if emailbd == email:
-        return jsonify({"Já existe um cadastro com esse e-mail."}), 400
+    #aqui precisa consultar o bd e voltar email caso tenha um igual---------------------------------------------------------------
+    #emailbd = request.get_json()
+    #if emailbd == email:
+    #    return jsonify({"Já existe um cadastro com esse e-mail."}), 400
     
-    #aqui precisa consultar o bd e voltar email caso tenha um igual
-    cpfbd = request.get_json()
-    if cpfbd == cpf:
-        return jsonify({"Já existe um cadastro com esse CPF."}), 400
+    #aqui precisa consultar o bd e voltar email caso tenha um igual----------------------------------------------------------------
+    #cpfbd = request.get_json()
+    #if cpfbd == cpf:
+    #    return jsonify({"Já existe um cadastro com esse CPF."}), 400
+    
+    #aqui os dados são enviados para o banco!!!
+    database.push_usuario(nome_completo, cpf, tipo_sanguineo, data_nascimento, cep, email, senha)
 
     return jsonify({"status": "sucesso", "mensagem": "Usuário cadastrado com sucesso!"}), 200
 
 @app.route('/EnvioLogin', methods=['POST'])
-def envio_login():
+def envio_login():#FAZER AQUI
     dados = request.get_json()
-
+    usuario_id = dados.get('usuario_id')
     email = dados.get('email')
     senha = dados.get('senha')
 
-    session['usuario_id'] = 11 # usuario de mentira
-    # aki trata o login!! valida credenciais no banco + cria sessão/token
+    #session['usuario_id'] = 11
+    # aki trata o login!! valida credenciais no banco + cria sessão/token ---------------------------------------------------------
+    usuario = database.selectBy_usuario(usuario_id)
 
     usuario = {
         "id": session['usuario_id'],
-        "nomeCompleto": "Usuário Teste",
+        "nomeCompleto": usuario['nome_completo'],
         "email": email,
         "senha": senha
     }
@@ -314,7 +323,7 @@ def cadastrar_newsletter():
         return jsonify({"mensagem": "Nome e e-mail são obrigatórios!"}), 400
     
     return jsonify({"mensagem": "Inscrição realizada com sucesso!"}), 201
-    #!!! aqui coloca a instancia com funcao pra salvar no bd e na tabela certa
+    #!!! aqui coloca a instancia com funcao pra salvar no bd e na tabela certa ------------------------------------------------------------
 
 
 if __name__ == "__main__":
