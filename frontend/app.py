@@ -166,8 +166,6 @@ def historico_agendamentos_excluir(agendamento_id):
     if not cancelado:
         return jsonify({"status": "erro", "mensagem": "Não foi possível cancelar o agendamento."}), 400
 
-    #precisa tirar o agendamento do bd--------------------------------------------------------------------------------------
-
     return jsonify({"status": "sucesso", "mensagem": "Agendamento removido com sucesso!"}), 200
 
 # FLUXO DE AGENDAMENTO (usuario logado)
@@ -264,16 +262,6 @@ def envio_cadastro():
     '''if int(data_nascimento[3:]) < 2010:
         return jsonify({"Você precisa ter no mínimo 16 anos para doar."}), 400'''
 
-    #aqui precisa consultar o bd e voltar email caso tenha um igual---------------------------------------------------------------
-    #emailbd = request.get_json()
-    #if emailbd == email:
-    #    return jsonify({"Já existe um cadastro com esse e-mail."}), 400
-    
-    #aqui precisa consultar o bd e voltar email caso tenha um igual----------------------------------------------------------------
-    #cpfbd = request.get_json()
-    #if cpfbd == cpf:
-    #    return jsonify({"Já existe um cadastro com esse CPF."}), 400
-    
     #aqui os dados são enviados para o banco!!!
     database.push_usuario(nome_completo, cpf, tipo_sanguineo, data_nascimento, cep, email, senha)
 
@@ -337,8 +325,7 @@ def cadastrar_newsletter():
         return jsonify({"mensagem": "Nome e e-mail são obrigatórios!"}), 400
     
     return jsonify({"mensagem": "Inscrição realizada com sucesso!"}), 201
-    #!!! aqui coloca a instancia com funcao pra salvar no bd e na tabela certa ------------------------------------------------------------
-
+    # somente perfumaria!
 
 if __name__ == "__main__":
     app.run(port=3000, debug=True)
