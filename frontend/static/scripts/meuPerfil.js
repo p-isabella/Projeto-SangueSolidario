@@ -1,12 +1,31 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
   let usuario = null;
+
   try {
     usuario = JSON.parse(localStorage.getItem('usuarioLogado'));
   } catch (erro) {
     usuario = null;
   }
 
-  if (!usuario) {
+  try {
+    const resposta = await fetch('/usuario/meuPerfil/ConsultaDados');
+    if (resposta.ok) {
+      const dados = await resposta.json();
+      if (dados && (dados.nomeCompleto || dados.email)) {
+        usuario = Object.assign({}, usuario || {}, {
+          id: dados.id || usuario?.id,
+          nomeCompleto: dados.nomeCompleto || usuario?.nomeCompleto || '',
+          email: dados.email || usuario?.email || '',
+          senha: dados.senha || usuario?.senha || ''
+        });
+        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+      }
+    }
+  } catch (erro) {
+    console.log('Não foi possível carregar o perfil do servidor:', erro);
+  }
+
+  if (!usuario || !usuario.email) {
     window.location.href = '/paginaInicial/login';
     return;
   }
@@ -75,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function () {
     mensagemDiv.innerHTML = '';
   });
 
-  botaoSalvarPerfil.addEventListener('click', function () {
+  botaoSalvarPerfil.addEventListener('click', async function () {
     const novoNome = inputNome.value.trim();
     const novoEmail = inputEmail.value.trim().toLowerCase();
     const novaSenha = inputSenha.value;
@@ -85,32 +104,36 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    let usuarios;
+    let usuarios = [];
     try {
       usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
     } catch (erro) {
       usuarios = [];
     }
 
-    const emailEmUsoPorOutraConta = usuarios.some(function (u) {
-      return u.email === novoEmail && u.cpf !== usuario.cpf;
-    });
+    if (usuario && usuario.cpf) {
+      const emailEmUsoPorOutraConta = usuarios.some(function (u) {
+        return u.email === novoEmail && u.cpf !== usuario.cpf;
+      });
 
-    if (emailEmUsoPorOutraConta) {
-      mostrarMensagem('Esse e-mail já está sendo usado por outra conta.', 'danger');
-      return;
-    }
-
-    usuarios = usuarios.map(function (u) {
-      if (u.cpf === usuario.cpf) {
-        return Object.assign({}, u, {
-          nomeCompleto: novoNome,
-          email: novoEmail,
-          senha: novaSenha
-        });
+      if (emailEmUsoPorOutraConta) {
+        mostrarMensagem('Esse e-mail já está sendo usado por outra conta.', 'danger');
+        return;
       }
-      return u;
-    });
+
+      usuarios = usuarios.map(function (u) {
+        if (u.cpf === usuario.cpf) {
+          return Object.assign({}, u, {
+            nomeCompleto: novoNome,
+            email: novoEmail,
+            senha: novaSenha
+          });
+        }
+        return u;
+      });
+
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    }
 
     try {
       const resposta = await fetch('/usuario/meuPerfil/EditaDados', {
@@ -130,22 +153,24 @@ document.addEventListener('DOMContentLoaded', function () {
         mostrarMensagem(resultado.mensagem || 'Erro ao salvar alterações no servidor.', 'danger');
         return;
       }
+
+      const resultado = await resposta.json();
+      usuario = Object.assign({}, usuario, resultado.usuario || {}, {
+        nomeCompleto: novoNome,
+        email: novoEmail,
+        senha: novaSenha
+      });
     } catch (erro) {
       console.log('Erro ao conectar no servidor:', erro);
       mostrarMensagem('Não foi possível salvar no servidor.', 'danger');
       return;
     }
 
-    usuario = Object.assign({}, usuario, {
-      nomeCompleto: novoNome,
-      email: novoEmail,
-      senha: novaSenha
-    });
     localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
 
     preencherCampos();
     sairModoEdicao();
-    mostrarMensagem('Dados updated com sucesso!', 'success');
+    mostrarMensagem('Dados atualizados com sucesso!', 'success');
   });
 
   const botaoHistoricoAgendamentos = document.getElementById('botaoHistoricoAgendamentos');
@@ -153,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.location.href = '/usuario/HistoricoAgendamentos';
   });
 
-  botaoExcluirConta.addEventListener('click', function () {
+  botaoExcluirConta.addEventListener('click', async function () {
     const confirmar = window.confirm(
       'Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.'
     );
@@ -161,20 +186,37 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    let usuarios;
+    try {
+      const resposta = await fetch('/usuario/meuPerfil/ExcluirConta', {
+        method: 'DELETE'
+      });
+
+      if (!resposta.ok) {
+        const resultado = await resposta.json();
+        mostrarMensagem(resultado.mensagem || 'Não foi possível excluir a conta.', 'danger');
+        return;
+      }
+    } catch (erro) {
+      console.log('Erro ao excluir conta:', erro);
+      mostrarMensagem('Não foi possível excluir a conta no servidor.', 'danger');
+      return;
+    }
+
+    let usuarios = [];
     try {
       usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
     } catch (erro) {
       usuarios = [];
     }
 
-    usuarios = usuarios.filter(function (u) {
-      return u.cpf !== usuario.cpf;
-    });
+    if (usuario && usuario.cpf) {
+      usuarios = usuarios.filter(function (u) {
+        return u.cpf !== usuario.cpf;
+      });
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    }
 
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
     localStorage.removeItem('usuarioLogado');
-
     window.location.href = '/';
   });
 });
