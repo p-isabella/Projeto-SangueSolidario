@@ -1,3 +1,13 @@
+import os
+import sys
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+FRONTEND_DIR = os.path.dirname(__file__)
+
+for path in [FRONTEND_DIR, ROOT_DIR]:
+    if path not in sys.path:
+        sys.path.insert(0, path)
+
 from flask import Flask, request, jsonify, render_template, session
 from flask_cors import CORS
 from databaseAdapter import databaseAdapter
