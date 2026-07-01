@@ -12,6 +12,20 @@ app.secret_key = 'isa'
 database = databaseAdapter()
 admin = AdministradorAgendamentos()
 
+def usuario_da_sessao():
+    if 'usuario' in session and isinstance(session['usuario'], dict):
+        return session['usuario']
+
+    if 'usuario_id' in session:
+        return {
+            "id": session['usuario_id'],
+            "nomeCompleto": session.get('nomeCompleto', 'Usuário Teste'),
+            "email": session.get('email', ''),
+            "senha": session.get('senha', '')
+        }
+
+    return None
+
 @app.route('/')
 def pagina_inicial():
     return render_template('index.html')
@@ -52,28 +66,63 @@ def meu_perfil():
 
 @app.get('/usuario/meuPerfil/ConsultaDados')
 def meu_perfil_consulta():
-    # AQUI PRECISO DE UMA QUERY DE CONSULTA DOS DADOS DO USUARIO. TODOS OS DADOS!
+    #consulta de todos os dados
+    usuario = usuario_da_sessao()
+
+    if not usuario:
+        return jsonify({
+            "nomeCompleto": None,
+            "email": None,
+            "senha": None
+        }), 200
+
     return jsonify({
-        "nomeCompleto": None,
-        "email": None,
-        "senha": None
-    })
+        "nomeCompleto": usuario.get('nomeCompleto'),
+        "email": usuario.get('email'),
+        "senha": usuario.get('senha')
+    }), 200
 
 @app.route('/usuario/meuPerfil/EditaDados', methods=['PUT'])
 def meu_perfil_edita():
-    dados_novos = request.get_json()
-    
-    nome = dados_novos.get('nomeCompleto')
-    email = dados_novos.get('email')
-    senha = dados_novos.get('senha')
+    if 'usuario_id' not in session:
+        return jsonify({"status": "erro", "mensagem": "Sessão expirada ou usuário não autenticado."}), 401
 
-    # aki vou ter uma edição de usuário em sua classe + essa edição salva no banco de dados
-    return jsonify({"status": "sucesso", "mensagem": "Perfil atualizado com sucesso!"}), 200
+    dados_novos = request.get_json(silent=True) or {}
+
+    nome = (dados_novos.get('nomeCompleto') or '').strip()
+    email = (dados_novos.get('email') or '').strip().lower()
+    senha = (dados_novos.get('senha') or '').strip()
+
+    if not nome or not email or not senha:
+        return jsonify({"status": "erro", "mensagem": "Nome, e-mail e senha são obrigatórios."}), 400
+
+    usuario_atual = usuario_da_sessao() or {}
+    usuario_atual.update({
+        "id": session['usuario_id'],
+        "nomeCompleto": nome,
+        "email": email,
+        "senha": senha
+    })
+
+    session['usuario'] = usuario_atual
+    session['nomeCompleto'] = nome
+    session['email'] = email
+    session['senha'] = senha
+
+    return jsonify({
+        "status": "sucesso",
+        "mensagem": "Perfil atualizado com sucesso!",
+        "usuario": usuario_atual
+    }), 200
+    #colocar as edições no banco
 
 @app.route('/usuario/meuPerfil/ExcluirConta', methods=['DELETE'])
 def meu_perfil_exclui():
-    # aqui vou ter a exclusão do usuário no banco de dados via sessão + encerrar a sessão dele
-    return jsonify({"status": "sucesso", "mensagem": "Conta excluída com sucesso!"}), 200
+    if 'usuario_id' in session:
+        session.clear()
+        return jsonify({"status": "sucesso", "mensagem": "Usuário deletado com sucesso!"}), 200
+
+    return jsonify({"status": "erro", "mensagem": "Nenhuma sessão ativa para encerrar."}), 401
 
 @app.route('/usuario/HistoricoAgendamentos')
 def historico_agendamentos():
@@ -84,9 +133,26 @@ def historico_agendamentos_consulta():
     # aqi preciso de uma query de consulta do BD E RETORNAR O HISTORICO DO USUARIO!
     return jsonify([])
 
-@app.route('/usuario/HistoricoAgendamentos/excluir/<int:agendamento_id>', methods=['DELETE'])
+@app.route('/usuario/HistoricoAgendamentos/excluir/<string:agendamento_id>', methods=['DELETE'])
 def historico_agendamentos_excluir(agendamento_id):
-    # aqui preciso da exclusão do agendamento (agendamento_id) no banco de dados
+    if 'usuario_id' not in session:
+        return jsonify({"status": "erro", "mensagem": "Sessão expirada ou usuário não autenticado."}), 401
+
+    agendamento = None
+    for item in admin._agendamentos:
+        if str(item.PuxaID()) == str(agendamento_id):
+            agendamento = item
+            break
+
+    if agendamento is None:
+        return jsonify({"status": "erro", "mensagem": "Agendamento não encontrado."}), 404
+
+    cancelado = admin.CancelarAgendamento(agendamento)
+    if not cancelado:
+        return jsonify({"status": "erro", "mensagem": "Não foi possível cancelar o agendamento."}), 400
+
+    #precisa tirar o agendamento do bd
+
     return jsonify({"status": "sucesso", "mensagem": "Agendamento removido com sucesso!"}), 200
 
 # FLUXO DE AGENDAMENTO (usuario logado)
@@ -195,14 +261,19 @@ def envio_login():
     email = dados.get('email')
     senha = dados.get('senha')
 
-
     session['usuario_id'] = 11 # usuario de mentira
     # aki trata o login!! valida credenciais no banco + cria sessão/token
 
     usuario = {
+        "id": session['usuario_id'],
         "nomeCompleto": "Usuário Teste",
-        "email": email
+        "email": email,
+        "senha": senha
     }
+    session['usuario'] = usuario
+    session['nomeCompleto'] = usuario['nomeCompleto']
+    session['email'] = email
+    session['senha'] = senha
     return jsonify({"status": "sucesso", "mensagem": "Usuário logado com sucesso!", "usuario": usuario}), 200
 
 @app.route('/usuario/verificaSessao', methods=['GET'])
@@ -214,8 +285,11 @@ def verifica_sessao():
 
 @app.route('/Logout', methods=['POST'])
 def logout():
-    # aki trata o logout!! encerra a sessão/token do usuário
-    return jsonify({"status": "sucesso", "mensagem": "Usuário deslogado com sucesso!"}), 200
+    if 'usuario_id' in session:
+        session.clear()
+        return jsonify({"status": "sucesso", "mensagem": "Usuário deslogado com sucesso!"}), 200
+
+    return jsonify({"status": "erro", "mensagem": "Nenhuma sessão ativa para encerrar."}), 401
 
 # NEWSLETTER
 
