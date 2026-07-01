@@ -5,7 +5,7 @@ const aviso = document.querySelector('#Aviso')
 formulario.addEventListener('submit', async (evento) => {
     evento.preventDefault()
 
-    const senhaPrincipal = document.querySelector('#senha').value
+    const senhaPrincipal = document.querySelector('#criar_senha').value
     const confirmeSenha = document.querySelector('#confirme_senha').value
 
     if (senhaPrincipal !== confirmeSenha) {
@@ -20,7 +20,7 @@ formulario.addEventListener('submit', async (evento) => {
         data_nascimento: document.querySelector('#data_nascimento').value,
         cep: document.querySelector('#cep').value,
         email: document.querySelector('#email').value,
-        senha: document.querySelector('#confirme_senha').value
+        senha: confirmeSenha
     }
 
     try {
@@ -32,6 +32,7 @@ formulario.addEventListener('submit', async (evento) => {
             body: JSON.stringify(dadosFormulario)
         })
 
+        const resultado = await resposta.json().catch(() => ({}))
 
         if (resposta.ok) {
             aviso.innerHTML = `<h1 style="color: green;">${resultado.mensagem || 'Cadastro realizado com sucesso!'}</h1>`;
