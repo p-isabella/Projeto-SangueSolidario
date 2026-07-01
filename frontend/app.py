@@ -29,7 +29,7 @@ def usuario_da_sessao():
     if 'usuario_id' in session:
         return {
             "id": session['usuario_id'],
-            "nomeCompleto": session.get('nomeCompleto', 'Usuário Teste'),
+            "nome_completo": session.get('nome_completo', 'Usuário Teste'),
             "email": session.get('email', ''),
             "senha": session.get('senha', '')
         }
@@ -86,13 +86,13 @@ def meu_perfil_consulta():
     
     if not usuario:
         return jsonify({
-            "nomeCompleto": None,
+            "nome_completo": None,
             "email": None,
             "senha": None
         }), 200
 
     return jsonify({
-        "nomeCompleto": usuario.get('nomeCompleto'),
+        "nome_completo": usuario.get('nome_completo'),
         "email": usuario.get('email'),
         "senha": usuario.get('senha')
     }), 200
@@ -104,7 +104,7 @@ def meu_perfil_edita():
 
     dados_novos = request.get_json(silent=True) or {}
 
-    nome = (dados_novos.get('nomeCompleto') or '').strip()
+    nome = (dados_novos.get('nome_completo') or '').strip()
     email = (dados_novos.get('email') or '').strip().lower()
     senha = (dados_novos.get('senha') or '').strip()
 
@@ -114,13 +114,13 @@ def meu_perfil_edita():
     usuario_atual = usuario_da_sessao() or {}
     usuario_atual.update({
         "id": session['usuario_id'],
-        "nomeCompleto": nome,
+        "nome_completo": nome,
         "email": email,
         "senha": senha
     })
 
     session['usuario'] = usuario_atual
-    session['nomeCompleto'] = nome
+    session['nome_completo'] = nome
     session['email'] = email
     session['senha'] = senha
 
@@ -219,6 +219,14 @@ def criar_agendamento():
     if not reservado:
         return jsonify({"status": "erro", "mensagem": "Não foi possível reservar o agendamento."}), 409
 
+    database.push_agendamento(
+        session['usuario_id'],
+        data,
+        hora,
+        unidade,
+        'pendente'
+    )
+
     return jsonify({
         "status": "sucesso",
         "mensagem": "Agendamento criado com sucesso!",
@@ -230,7 +238,6 @@ def criar_agendamento():
             "unidade": agendamento.unidade
         }
     }), 201
-    #falta puxar os novos dados pro bd-----------------------------------------------------------------------------------
 
 @app.route('/usuario/agendamento/concluido')
 def concluido():
@@ -254,8 +261,8 @@ def envio_cadastro():
     if not email or not senha or not cep or not data_nascimento or not tipo_sanguineo or not cpf or not nome_completo:
         return jsonify({"status": "erro", "mensagem": "Por favor, preencha todos os campos."}), 400
 
-    if int(data_nascimento[3:]) < 2010:
-        return jsonify({"Você precisa ter no mínimo 16 anos para doar."}), 400
+    '''if int(data_nascimento[3:]) < 2010:
+        return jsonify({"Você precisa ter no mínimo 16 anos para doar."}), 400'''
 
     #aqui precisa consultar o bd e voltar email caso tenha um igual---------------------------------------------------------------
     #emailbd = request.get_json()
@@ -273,27 +280,34 @@ def envio_cadastro():
     return jsonify({"status": "sucesso", "mensagem": "Usuário cadastrado com sucesso!"}), 200
 
 @app.route('/EnvioLogin', methods=['POST'])
-def envio_login():#FAZER AQUI
-    dados = request.get_json()
-    usuario_id = dados.get('usuario_id')
-    email = dados.get('email')
-    senha = dados.get('senha')
+def envio_login():
+    dados = request.get_json(silent=True) or {}
+    email = (dados.get('email') or '').strip().lower()
+    senha = (dados.get('senha') or '').strip()
 
-    #session['usuario_id'] = 11
-    # aki trata o login!! valida credenciais no banco + cria sessão/token ---------------------------------------------------------
-    usuario = database.selectBy_usuario(usuario_id)
+    if not email or not senha:
+        return jsonify({"status": "erro", "mensagem": "E-mail e senha são obrigatórios."}), 400
 
-    usuario = {
-        "id": session['usuario_id'],
-        "nomeCompleto": usuario['nome_completo'],
+    usuario = database.select_usuario_por_credenciais(email, senha)
+    if not usuario:
+        return jsonify({"status": "erro", "mensagem": "E-mail ou senha inválidos."}), 401
+
+    usuario = usuario[0]
+    usuario_id = usuario[0]
+    nome_completo = usuario[1]
+
+    session['usuario_id'] = usuario_id
+    session['usuario'] = {
+        "id": usuario_id,
+        "nome_completo": nome_completo,
         "email": email,
         "senha": senha
     }
-    session['usuario'] = usuario
-    session['nomeCompleto'] = usuario['nomeCompleto']
+    session['nome_completo'] = nome_completo
     session['email'] = email
     session['senha'] = senha
-    return jsonify({"status": "sucesso", "mensagem": "Usuário logado com sucesso!", "usuario": usuario}), 200
+
+    return jsonify({"status": "sucesso", "mensagem": "Usuário logado com sucesso!", "usuario": session['usuario']}), 200
 
 @app.route('/usuario/verificaSessao', methods=['GET'])
 def verifica_sessao():
